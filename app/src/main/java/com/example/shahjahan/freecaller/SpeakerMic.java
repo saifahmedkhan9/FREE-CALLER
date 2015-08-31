@@ -40,7 +40,6 @@ public class SpeakerMic {
         this.context = context;
     }
 
-
     public void startSpeakers() {
         // Creates the thread for receiving and playing back audio
         if(!speakers) {
@@ -64,6 +63,15 @@ public class SpeakerMic {
                             DatagramPacket packet = new DatagramPacket(buf, BUF_SIZE);
                             socket.receive(packet);
                             Log.i(TAG, "Packet received: " + packet.getLength());
+                            String current_ip = new String(packet.getAddress().getHostAddress());
+
+                            Log.i(TAG,"the two ips are: " + getIPAddress() + current_ip);
+//                            if ( current_ip.contains(getIPAddress()))
+//                            {
+//                                Log.i(TAG,"Same ip here.");
+//                                continue;
+//                            }
+
                             track.write(packet.getData(), 0, BUF_SIZE);
                         }
                         // Stop playing back and release resources
@@ -125,11 +133,6 @@ public class SpeakerMic {
                     while(mic) {
                         // Capture audio from the mic and transmit it
 
-                        if ( IP_Address.contains(getIPAddress()))
-                        {
-                            Log.i(TAG,"Same ip here.");
-                            continue;
-                        }
                         bytes_read = audioRecorder.read(buf, 0, BUF_SIZE);
                         DatagramPacket packet = new DatagramPacket(buf, bytes_read, InetAddress.getByName(IP_Address), port);
                         socket.send(packet);
@@ -169,7 +172,4 @@ public class SpeakerMic {
         });
         thread.start();
     }
-
-
-
 }

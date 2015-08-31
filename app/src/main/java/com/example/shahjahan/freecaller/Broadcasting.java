@@ -15,8 +15,8 @@ import java.net.SocketException;
 /**
  * Created by shahjahan on 25/8/15.
  */
-public class Broadcasting
 
+public class Broadcasting
 {
     private boolean calling_broadcast = true;
     private static final int CALLING_PORT = 5010;
@@ -151,7 +151,7 @@ public class Broadcasting
 
 
     InetAddress getBroadcastAddress() throws IOException {
-        WifiManager wifi = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        WifiManager wifi = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
         DhcpInfo dhcp = wifi.getDhcpInfo();
         // handle null somehow
 

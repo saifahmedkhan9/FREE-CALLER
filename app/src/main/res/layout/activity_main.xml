@@ -1,73 +1,53 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.DrawerLayout
+    android:id="@+id/drawer_layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".MainActivity">
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/enter_device_name"
-        android:hint="@string/device_name_hint"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/device_name_button"
-        android:id="@+id/device_name_button"
-        android:onClick="setDeviceName"
-        android:layout_alignBottom="@+id/enter_device_name"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".MainActivity"
+    android:background="#123"
+    >
 
     <LinearLayout
+        android:id="@+id/linear"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/enter_device_name"
-        android:layout_alignParentLeft="true"
-        android:id="@+id/main_content_linear_layout"
         android:orientation="vertical"
-        android:layout_alignParentStart="true">
+        tools:context=".MainActivity">
 
-        <Button
-            android:id="@+id/button2"
-            android:layout_width="wrap_content"
-            android:layout_gravity="center_horizontal"
+    <include
+        android:id="@+id/tool_bar"
+        layout="@layout/tool_bar"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        />
 
+        <com.example.shahjahan.freecaller.SlidingTabLayout
+            android:id="@+id/tabs"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/updateList"
-            android:onClick="updateList"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
+            android:elevation="2dp"
+            android:background="#133"/>
 
-        <ProgressBar
-            android:id="@+id/progress_bar_contact_list"
-            style="?android:attr/progressBarStyle"
-            android:layout_width="wrap_content"
-            android:visibility="gone"
-            android:layout_gravity="center_horizontal"
-            android:layout_height="wrap_content" >
-        </ProgressBar>
-
-        <ListView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/all_contacts"
-            android:layout_below="@+id/button3"
-            android:background="#bbb"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
-
-
-
+        <android.support.v4.view.ViewPager
+            android:id="@+id/pager"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            ></android.support.v4.view.ViewPager>
 
     </LinearLayout>
 
-</RelativeLayout>
+    <android.support.design.widget.NavigationView
+        android:id="@+id/navigation_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        app:headerLayout="@layout/drawer_header"
+        app:itemIconTint="#333"
+        app:itemTextColor="#333"
+        app:menu="@menu/menu_drawer" />
+
+
+</android.support.v4.widget.DrawerLayout>

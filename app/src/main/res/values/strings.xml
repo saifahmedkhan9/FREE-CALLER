@@ -8,4 +8,9 @@
     <string name="updateList">Update Contact List</string>
     <string name="title_activity_call_receive">CallReceive</string>
     <string name="title_activity_call_progress">CallProgress</string>
+    <string name="title_activity_splash">SplashActivity</string>
+    <string name="drawer_close">Close</string>
+    <string name="drawer_open">Open</string>
+    <string name="title_activity_tab1">Tab1</string>
+    <string name="title_activity_tab2">Tab2</string>
 </resources>

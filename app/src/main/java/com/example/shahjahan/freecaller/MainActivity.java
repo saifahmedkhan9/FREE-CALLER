@@ -1,12 +1,20 @@
 package com.example.shahjahan.freecaller;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.AsyncTask;
+import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -23,73 +31,92 @@ import java.net.DatagramSocket;
 import java.util.ArrayList;
 
 
-public class MainActivity extends AppCompatActivity {
+
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 //    Class for speaker and mic control
+Toolbar toolbar;
 
-    SpeakerMic speakerMic = new SpeakerMic(this);
+    private DrawerLayout mDrawerLayout;
+    private NavigationView mDrawer;
+    private ActionBarDrawerToggle mDrawerToggle;
+    ViewPager pager;
+    ViewPagerAdapter adapter;
+    SlidingTabLayout tabs;
 
-//    Class used for broadcasting packets
+    CharSequence Titles[]={"Contact","Call History"};
+    int Numboftabs =2;
 
-    Broadcasting broadcasting = new Broadcasting(this);
-//    class used for toasting purpose
-    Toasting toasting = new Toasting();
-
-//  Logging control via this class
-
-    LoggerConfig loggerConfig = new LoggerConfig();
-
-//    String name for shared preferences
-
-    String DEVICE_NAME_SHAREDPREFERENCES = "DEVICE_NAME_SHAREDPREFERENCES";
-    String DEVICE_NAME = "DEVICE_NAME";
-    String device_saved_name;
-    String TAG = "FREECALLER_MAIN";
-    Integer DISCOVERY_PORT = 50005;
-    SharedPreferences sharedPreferences;
-    EditText editText;
-    LinearLayout linearLayout;
-    ListView all_contacts;
-    ArrayList<String> All_Contacts = new ArrayList<>();
-    Button device_name_button;
-    ProgressBar progressBarContactList;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        editText = (EditText) findViewById(R.id.enter_device_name);
-        device_name_button = (Button)findViewById(R.id.device_name_button);
-        sharedPreferences = getSharedPreferences(DEVICE_NAME_SHAREDPREFERENCES, this.MODE_PRIVATE);
-        linearLayout = (LinearLayout) findViewById(R.id.main_content_linear_layout);
-        progressBarContactList = (ProgressBar)findViewById(R.id.progress_bar_contact_list);
-        all_contacts = (ListView)findViewById(R.id.all_contacts);
-//        check whether the name exists already or not?
 
-        if ( !(sharedPreferences.getString(DEVICE_NAME,null) == null) )
-        {
-            editText.setVisibility(View.GONE);
-            device_name_button.setVisibility(View.GONE);
-            device_saved_name = sharedPreferences.getString(DEVICE_NAME,null);
-            toasting.MakeText("Welcome " + device_saved_name,this);
+        toolbar = (Toolbar) findViewById(R.id.tool_bar);
+        setSupportActionBar(toolbar);
 
-//            broadcast packets from the wifi....
+        mDrawer=(NavigationView)findViewById(R.id.navigation_view);
 
-            if ( loggerConfig.LOG )
-                Log.d(TAG,"broadcasting packets");
+        mDrawer.setNavigationItemSelectedListener(this);
+        mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
 
-            broadcasting.broadcastPackets(device_saved_name);
-            broadcasting.checkForCalls();
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.drawer_open,
+                R.string.drawer_close);
 
-        }
-        else
-        {
-            if ( loggerConfig.LOG )
-                Log.d(TAG,"visibility has been gone");
-                linearLayout.setVisibility(View.GONE);
-        }
+        mDrawerToggle.setDrawerIndicatorEnabled(true);
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
+        mDrawerToggle.syncState();
+
+        adapter =  new ViewPagerAdapter(getSupportFragmentManager(),Titles,Numboftabs);
+
+        // Assigning ViewPager View and setting the adapter
+        pager = (ViewPager) findViewById(R.id.pager);
+        pager.setAdapter(adapter);
+
+        // Assiging the Sliding Tab Layout View
+        tabs = (SlidingTabLayout) findViewById(R.id.tabs);
+        tabs.setDistributeEvenly(true); // To make the Tabs Fixed set this true, This makes the tabs Space Evenly in Available width
+
+        // Setting Custom Color for the Scroll bar indicator of the Tab View
+        tabs.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
+            @Override
+            public int getIndicatorColor(int position) {
+                return getResources().getColor(R.color.tabsScrollColor);
+            }
+        });
+
+        // Setting the ViewPager For the SlidingTabsLayout
+        tabs.setViewPager(pager);
+
+
 
     }
+
+
+    @Override
+    public void onConfigurationChanged(final Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mDrawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        if (item.getItemId() == android.support.v7.appcompat.R.id.home) {
+            return mDrawerToggle.onOptionsItemSelected(item);
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+            mDrawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
 
 
     @Override
@@ -99,76 +126,61 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    public void setDeviceName(View view) {
 
-        sharedPreferences.edit().putString(DEVICE_NAME, editText.getText().toString()).apply();
-        startActivity(new Intent(this,MainActivity.class));
-    }
+    @Override
+    public boolean onNavigationItemSelected(MenuItem menuItem) {
 
-    public void updateList(View view) {
+        Intent intent;
+        switch (menuItem.getItemId()) {
+            case R.id.home:
+                mDrawerLayout.closeDrawer(GravityCompat.START);
+                break;
 
-        new ReceivePacket().execute();
-    }
+            case R.id.about:
+                Snackbar.make(mDrawerLayout, "ABOUT", Snackbar.LENGTH_SHORT)
+                        .show();
+                break;
+            case R.id.contact:
+                Snackbar.make(mDrawerLayout, "CONTACT", Snackbar.LENGTH_SHORT)
 
-    class ReceivePacket extends AsyncTask<Void, Void, String> {
-        DatagramPacket packet;
+                        .show();
+                break;
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            progressBarContactList.setVisibility(View.VISIBLE);
-        }
+            case R.id.feed:
+                Snackbar.make(mDrawerLayout, "FEEDBACK", Snackbar.LENGTH_SHORT)
 
-        @Override
-        protected String doInBackground(Void... voids) {
-            try {
-                DatagramSocket socket = new DatagramSocket(DISCOVERY_PORT);
-                socket.setBroadcast(true);
-                byte[] buf = new byte[1024];
-                packet = new DatagramPacket(buf, buf.length);
-                socket.receive(packet);
-                socket.disconnect();
-                socket.close();
+                        .show();
+                break;
+            case R.id.profile:
+                Snackbar.make(mDrawerLayout, "PROFILE", Snackbar.LENGTH_SHORT)
 
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+                        .show();
+                break;
+            case R.id.terms:
+                Snackbar.make(mDrawerLayout, "TERMS AND CONDITION", Snackbar.LENGTH_SHORT)
 
-            String device_name = new String(packet.getData());
-            String ip_address = new String(packet.getAddress().getHostAddress());
+                        .show();
+                break;
+            case R.id.dev:
+                Snackbar.make(mDrawerLayout, "ABOUT DEVELOPER", Snackbar.LENGTH_SHORT)
 
-            return device_name + " ip:" + ip_address;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-
-            if (!(All_Contacts.contains(s)) && (!(s.equals(speakerMic.getIPAddress())))) {
-                All_Contacts.add(s);
-            }
-
-            ArrayAdapter adapter = new ArrayAdapter(getApplicationContext(), android.R.layout.simple_list_item_1, All_Contacts);
-            all_contacts.setAdapter(adapter);
-
-            all_contacts.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
-                    String[] parts = All_Contacts.get(i).split(":");
-                        Toast.makeText(getApplicationContext(), "The call is made to" + parts[1], Toast.LENGTH_LONG).show();
-                    broadcasting.broadcastCallingPackets(parts[1]);
-
-                    Intent intent = new Intent(getApplicationContext(),CallProgress.class);
-                    intent.putExtra("IP", parts[1]);
-                    startActivity(intent);
-
-                }
-            });
-            progressBarContactList.setVisibility(View.GONE);
+                        .show();
+                break;
 
         }
+
+        return false;
     }
+
+//    public void updateList(View view) {
+//
+//        new ReceivePacket().execute();
+//    }
+
+
+
+
+
 
 }
 

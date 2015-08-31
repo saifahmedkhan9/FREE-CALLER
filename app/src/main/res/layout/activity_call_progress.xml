@@ -20,6 +20,7 @@
         android:layout_height="wrap_content"
         android:text="Disconnect"
         android:onClick="disconnect"
+
         android:id="@+id/button"
         android:layout_below="@+id/textView"
         android:layout_centerHorizontal="true"
