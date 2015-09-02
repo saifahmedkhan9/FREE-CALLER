@@ -38,12 +38,10 @@ import java.util.ArrayList;
  */
 public class Tab1 extends Fragment implements View.OnClickListener {
 
-    SpeakerMic speakerMic = new SpeakerMic(getContext());
 
     Toasting toasting = new Toasting();
 //  Logging control via this class
 
-    Broadcasting broadcasting = new Broadcasting(getActivity().getApplicationContext());
 
 //
     LoggerConfig loggerConfig = new LoggerConfig();
@@ -62,19 +60,22 @@ public class Tab1 extends Fragment implements View.OnClickListener {
     ArrayList<String> All_Contacts = new ArrayList<>();
     Button device_name_button,button2;
     ProgressBar progressBarContactList;
+    Broadcasting broadcasting;
+    SpeakerMic speakerMic;
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v =inflater.inflate(R.layout.activity_tab1,container,false);
         editText = (EditText)v.findViewById(R.id.enter_device_name);
         device_name_button = (Button)v.findViewById(R.id.device_name_button);
+        broadcasting = new Broadcasting(getContext());
+        speakerMic = new SpeakerMic(getContext());
+
         device_name_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                     sharedPreferences.edit().putString(DEVICE_NAME, editText.getText().toString()).apply();
                     startActivity(new Intent(getActivity(), MainActivity.class));
-
-
             }
         });
 
@@ -175,6 +176,7 @@ public class Tab1 extends Fragment implements View.OnClickListener {
 
                     Intent intent = new Intent(getActivity(),CallProgress.class);
                     intent.putExtra("IP", parts[1]);
+                    intent.putExtra("name",device_saved_name);
                     startActivity(intent);
 
                 }

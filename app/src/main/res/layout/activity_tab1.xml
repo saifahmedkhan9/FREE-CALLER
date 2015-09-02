@@ -6,7 +6,8 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="com.example.shahjahan.freecaller.Tab1"
     android:orientation="vertical"
-    android:background="@drawable/back1"
+    android:background="#B2DFDB"
+
     >
 
     <android.support.design.widget.TextInputLayout
@@ -48,7 +49,6 @@
         android:id="@+id/main_content_linear_layout"
         android:orientation="vertical"
         android:layout_alignParentStart="true"
-        android:background="@drawable/back2"
         >
 
         <Button
@@ -80,10 +80,9 @@
             android:layout_margin="10dp"
             android:id="@+id/all_contacts"
             android:layout_below="@+id/button3"
-            android:background="#99123123"
+            android:background="@drawable/list_back"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-
             />
 
     </LinearLayout>

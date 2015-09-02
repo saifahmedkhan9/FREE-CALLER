@@ -18,7 +18,6 @@
     android:gravity="center"
     />
     <ProgressBar
-        android:id="@+id/progress_bar_contact_list"
         style="?android:attr/progressBarStyle"
         android:indeterminateTintMode="src_atop"
         android:layout_width="wrap_content"

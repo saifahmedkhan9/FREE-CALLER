@@ -128,7 +128,7 @@ public class Broadcasting
                        socket.receive(packet);
                        String call_packet = new String(packet.getAddress().getHostAddress());
                        Log.d(TAG, "I am getting call from." + call_packet);
-                       Intent intent = new Intent(context,CallReceive.class);
+                       Intent intent = new Intent(context ,CallReceive.class);
                        intent.putExtra("IP",call_packet);
                        context.startActivity(intent);
                        socket.disconnect();

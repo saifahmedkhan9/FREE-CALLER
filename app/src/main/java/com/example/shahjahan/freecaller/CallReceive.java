@@ -7,6 +7,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import java.util.Timer;
+import java.util.TimerTask;
+
 
 public class CallReceive extends AppCompatActivity {
 
@@ -14,6 +17,7 @@ public class CallReceive extends AppCompatActivity {
 
     TextView ip_address_text;
     String ip_address;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,6 +34,8 @@ public class CallReceive extends AppCompatActivity {
         ip_address_text.setText("Getting call from " + ip_address);
 
 
+
+
     }
 
     @Override
@@ -41,6 +47,7 @@ public class CallReceive extends AppCompatActivity {
 
     public void acceptCall(View view)
     {
+
         Intent intent = new Intent(this,CallProgress.class);
         intent.putExtra("IP",ip_address);
         this.startActivity(intent);
